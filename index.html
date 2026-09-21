@@ -77,7 +77,7 @@
     /* 새로 올라온 소식 하이라이트 스타일 */
     .card.is-new {
       border: 1.5px solid var(--highlight-ring);
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.22);
       background-color: #f8faff;
     }
 
@@ -105,19 +105,29 @@
       background: #eff6ff;
       color: var(--primary);
       margin-right: 4px;
-      transition: opacity 0.3s;
     }
-    .badge-new {
-      background: #ef4444;
-      color: white;
+    
+    /* 문장 뒤쪽에 배치되는 인라인 NEW 뱃지 */
+    .badge-new-inline {
+      display: inline-block;
+      font-size: 0.7rem;
       font-weight: 700;
+      padding: 1px 6px;
+      margin-left: 6px;
+      border-radius: 4px;
+      background: #ef4444;
+      color: #ffffff;
+      vertical-align: middle;
+      line-height: 1.4;
       animation: pulse 1.8s infinite;
+      transition: opacity 0.3s;
     }
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.7; }
       100% { opacity: 1; }
     }
+
     .badge-dday {
       background: #fef2f2;
       color: #dc2626;
@@ -139,7 +149,7 @@
       font-size: 1.05rem;
       font-weight: 600;
       margin: 8px 0;
-      line-height: 1.4;
+      line-height: 1.45;
     }
     .info-row {
       font-size: 0.85rem;
@@ -202,7 +212,6 @@
   <script>
     let eventsData = [];
 
-    // 로컬스토리지에서 이미 확인한 공연 ID 목록 읽기
     function getSeenIds() {
       try {
         return JSON.parse(localStorage.getItem("seen_event_ids") || "[]");
@@ -211,18 +220,16 @@
       }
     }
 
-    // 카드 확인(마우스오버) 시 로컬스토리지에 저장
     function markAsSeen(id, cardElement) {
       let seen = getSeenIds();
       if (!seen.includes(id)) {
         seen.push(id);
         localStorage.setItem("seen_event_ids", JSON.stringify(seen));
       }
-      // 하이라이트 CSS 및 NEW 뱃지 즉시 제거
       cardElement.classList.remove("is-new");
-      const newBadge = cardElement.querySelector(".badge-new");
-      if (newBadge) {
-        newBadge.remove();
+      const inlineNewBadge = cardElement.querySelector(".badge-new-inline");
+      if (inlineNewBadge) {
+        inlineNewBadge.remove();
       }
     }
 
@@ -281,18 +288,22 @@
       filtered.forEach(item => {
         const status = parseDDayStatus(item.startDate, item.endDate);
         const isSeen = seenIds.includes(item.id);
-        const isNew = !isSeen && !status.isPast; // 지난 공연은 NEW 뱃지 제외
+        const isNew = !isSeen && !status.isPast;
 
         const card = document.createElement("div");
         card.className = `card ${status.isPast ? "past-event" : ""} ${isNew ? "is-new" : ""}`;
 
+        // 공연 제목 바로 뒤에 NEW 뱃지 부착
+        const titleHtml = isNew 
+          ? `${item.title}<span class="badge-new-inline">NEW</span>`
+          : item.title;
+
         card.innerHTML = `
           <div class="card-top">
-            ${isNew ? '<span class="badge badge-new">NEW</span>' : ''}
             <span class="badge ${status.badgeClass}">${status.label}</span>
             <span class="badge">${item.region || "기타"}</span>
             <span class="badge badge-source">${item.source || "소식"}</span>
-            <div class="title">${item.title}</div>
+            <div class="title">${titleHtml}</div>
             <div class="info-row">📍 ${item.venue || "상세 확인"}</div>
             <div class="info-row">🗓️ ${item.startDate}${item.endDate && item.endDate !== item.startDate ? ' ~ ' + item.endDate : ''}</div>
             <div class="info-row">🎟️ ${item.price || "상세페이지 확인"}</div>
@@ -302,7 +313,6 @@
           </a>
         `;
 
-        // 마우스오버(Hover) 시 읽음 처리 및 하이라이트 해제
         if (isNew) {
           card.addEventListener("mouseenter", () => {
             markAsSeen(item.id, card);
