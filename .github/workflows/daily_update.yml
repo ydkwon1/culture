@@ -1,0 +1,42 @@
+name: Daily Culture Radar Update
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # UTC 21:00 = 한국 시간(KST) 매일 오전 06:00
+  workflow_dispatch:      # 필요 시 수동 실행 가능
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run Crawler
+        env:
+          KOPIS_API_KEY: ${{ secrets.KOPIS_API_KEY }}
+        run: |
+          python crawler.py
+
+      - name: Commit and Push if data changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Auto update: $(date '+%Y-%m-%d')" || exit 0
+          git push
