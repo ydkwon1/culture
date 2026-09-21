@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "jc-2",
+    "title": "공모 2026 문화가 있는 날 (청춘마이크) 청년·실버",
+    "venue": "진천예술의전당 진아트홀",
+    "region": "진천군",
+    "genre": "기획/대관공연",
+    "startDate": "2026-02-24",
+    "endDate": "2026-02-24",
+    "price": "상세페이지 확인",
+    "link": "https://jinculture.or.kr/sub.php?code=45&mode=view&no=15",
+    "source": "생거진천문화재단"
+  },
+  {
+    "id": "jc-3",
+    "title": "공모 2026 우리동네 문화장날 공연단체 공모 2026",
+    "venue": "진천예술의전당 진아트홀",
+    "region": "진천군",
+    "genre": "기획/대관공연",
+    "startDate": "2026-02-24",
+    "endDate": "2026-02-24",
+    "price": "상세페이지 확인",
+    "link": "https://jinculture.or.kr/sub.php?code=45&mode=view&no=13",
+    "source": "생거진천문화재단"
+  },
+  {
+    "id": "jc-1",
+    "title": "채용공고 진천 예술의 전당 공연장 운영 기간제근로자 채",
+    "venue": "진천예술의전당 진아트홀",
+    "region": "진천군",
+    "genre": "기획/대관공연",
+    "startDate": "2026-09-11",
+    "endDate": "2026-09-11",
+    "price": "상세페이지 확인",
+    "link": "https://jinculture.or.kr/sub.php?code=46&mode=view&no=26",
+    "source": "생거진천문화재단"
+  }
+]
