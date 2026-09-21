@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>진천 인근 문화공연 레이더</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 8px 0;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card-top {
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #eff6ff;
+      color: var(--primary);
+      margin-right: 4px;
+    }
+    .badge-dday {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+    .title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+    .info-row {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 4px 0;
+    }
+    .btn-link {
+      display: inline-block;
+      text-align: center;
+      background: #f1f5f9;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+    .btn-link:hover {
+      background: var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>진천 인근 문화공연 알리미</h1>
+      <div class="subtitle">충북혁신도시 · 진천 · 음성 · 청주 · 천안 · 안성 권역 공연 소식</div>
+    </header>
+
+    <div class="filters" id="region-filters">
+      <button class="filter-btn active" data-region="all">전체 지역</button>
+      <button class="filter-btn" data-region="진천군">진천 관내</button>
+      <button class="filter-btn" data-region="음성군">혁신도시/음성</button>
+      <button class="filter-btn" data-region="청주시">청주</button>
+      <button class="filter-btn" data-region="천안시">천안</button>
+      <button class="filter-btn" data-region="안성시">안성</button>
+    </div>
+
+    <div class="grid" id="events-grid">
+      <!-- 동적 렌더링 영역 -->
+    </div>
+  </div>
+
+  <script>
+    let eventsData = [];
+
+    function calculateDDay(targetDateStr) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const target = new Date(targetDateStr);
+      const diffTime = target - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) return "D-Day";
+      if (diffDays > 0) return `D-${diffDays}`;
+      return "종료";
+    }
+
+    function renderCards(filterRegion = "all") {
+      const container = document.getElementById("events-grid");
+      container.innerHTML = "";
+
+      const filtered = filterRegion === "all" 
+        ? eventsData 
+        : eventsData.filter(e => e.region === filterRegion);
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p style='color: #64748b; grid-column: 1/-1;'>해당 지역에 등록된 예정 공연이 없습니다.</p>";
+        return;
+      }
+
+      filtered.forEach(item => {
+        const dday = calculateDDay(item.startDate);
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-top">
+            <span class="badge badge-dday">${dday}</span>
+            <span class="badge">${item.region}</span>
+            <span class="badge" style="background:#f3f4f6; color:#475569;">${item.genre}</span>
+            <div class="title">${item.title}</div>
+            <div class="info-row">📍 ${item.venue}</div>
+            <div class="info-row">🗓️ ${item.startDate}${item.endDate !== item.startDate ? ' ~ ' + item.endDate : ''}</div>
+            <div class="info-row">🎟️ ${item.price}</div>
+          </div>
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-link">상세 안내 / 예매 바로가기 →</a>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // data.json 로드
+    fetch("data.json")
+      .then(res => res.json())
+      .then(data => {
+        eventsData = data;
+        renderCards("all");
+      })
+      .catch(err => {
+        console.error("데이터 로드 실패:", err);
+      });
+
+    // 필터 버튼 이벤트
+    document.querySelectorAll("#region-filters .filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#region-filters .filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderCards(btn.dataset.region);
+      });
+    });
+  </script>
+</body>
+</html>
