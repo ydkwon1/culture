@@ -21,7 +21,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
     }
     header {
@@ -57,7 +57,7 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 16px;
     }
     .card {
@@ -71,8 +71,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       transition: transform 0.15s ease, opacity 0.2s ease;
     }
-    
-    /* 지나간 공연 스타일 (회색조 비활성화 처리) */
+    /* 지난 공연 회색 처리 */
     .card.past-event {
       background: #f1f5f9;
       border-color: #cbd5e1;
@@ -83,7 +82,6 @@
       opacity: 0.9;
       filter: grayscale(20%);
     }
-
     .card-top {
       margin-bottom: 12px;
     }
@@ -108,6 +106,11 @@
     .badge-ongoing {
       background: #f0fdf4;
       color: #16a34a;
+    }
+    .badge-source {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #cbd5e1;
     }
     .title {
       font-size: 1.05rem;
@@ -155,15 +158,17 @@
 <body>
   <div class="container">
     <header>
-      <h1>진천 인근 문화공연 알리미</h1>
-      <div class="subtitle">진천 · 음성 · 혁신도시 인근 공연 소식</div>
+      <h1>진천 인근 문화공연 레이더</h1>
+      <div class="subtitle">반경 20km 권역 (진천 · 음성/혁신도시 · 천안 · 안성) 실시간 공연·축제 소식</div>
     </header>
 
     <div class="filters" id="region-filters">
-      <button class="filter-btn active" data-region="all">전체</button>
+      <button class="filter-btn active" data-region="all">전체 권역</button>
       <button class="filter-btn" data-region="진천군">진천 관내</button>
       <button class="filter-btn" data-region="음성군">음성/혁신도시</button>
-      <button class="filter-btn" data-region="upcoming">예정된 공연만 보기</button>
+      <button class="filter-btn" data-region="천안시">천안</button>
+      <button class="filter-btn" data-region="안성시">안성</button>
+      <button class="filter-btn" data-region="upcoming">예정된 공연만</button>
     </div>
 
     <div class="grid" id="events-grid">
@@ -174,7 +179,6 @@
   <script>
     let eventsData = [];
 
-    // 안전한 날짜 파싱 및 D-Day 산출 함수
     function parseDDayStatus(startDateStr, endDateStr) {
       if (!startDateStr) return { label: "일정 확인", isPast: false, badgeClass: "badge" };
       
@@ -214,17 +218,14 @@
       container.innerHTML = "";
 
       let filtered = eventsData;
-      if (filterType === "진천군" || filterType === "음성군") {
+      if (["진천군", "음성군", "천안시", "안성시"].includes(filterType)) {
         filtered = eventsData.filter(e => e.region === filterType);
       } else if (filterType === "upcoming") {
-        filtered = eventsData.filter(e => {
-          const status = parseDDayStatus(e.startDate, e.endDate);
-          return !status.isPast;
-        });
+        filtered = eventsData.filter(e => !parseDDayStatus(e.startDate, e.endDate).isPast);
       }
 
       if (!filtered || filtered.length === 0) {
-        container.innerHTML = "<div id='status-msg'>해당 조건에 부합하는 공연 소식이 없습니다.</div>";
+        container.innerHTML = "<div id='status-msg'>선택한 지역에 예정된 공연 소식이 없습니다.</div>";
         return;
       }
 
@@ -237,26 +238,22 @@
           <div class="card-top">
             <span class="badge ${status.badgeClass}">${status.label}</span>
             <span class="badge">${item.region || "기타"}</span>
-            <span class="badge" style="background:#f1f5f9; color:#475569;">${item.genre || "공연"}</span>
+            <span class="badge badge-source">${item.source || "문화소식"}</span>
             <div class="title">${item.title}</div>
-            <div class="info-row">📍 ${item.venue || "상세 내용 확인"}</div>
-            <div class="info-row">🗓️ ${item.startDate || "미정"}${item.endDate && item.endDate !== item.startDate ? ' ~ ' + item.endDate : ''}</div>
-            <div class="info-row">🎟️ ${item.price || "무료/현장확인"}</div>
+            <div class="info-row">📍 ${item.venue || "상세 확인"}</div>
+            <div class="info-row">🗓️ ${item.startDate}${item.endDate && item.endDate !== item.startDate ? ' ~ ' + item.endDate : ''}</div>
+            <div class="info-row">🎟️ ${item.price || "상세페이지 확인"}</div>
           </div>
           <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-link">
-            ${status.isPast ? "공연 정보 보기 →" : "상세 안내 / 예매 바로가기 →"}
+            ${status.isPast ? "지난 소식 보기 →" : "상세 안내 / 예매 바로가기 →"}
           </a>
         `;
         container.appendChild(card);
       });
     }
 
-    // data.json 로드 (캐시 방지 파라미터 ?t= 추가)
     fetch(`data.json?t=${new Date().getTime()}`)
-      .then(res => {
-        if (!res.ok) throw new Error("네트워크 응답 실패: " + res.status);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
         eventsData = Array.isArray(data) ? data : [];
         renderCards("all");
@@ -264,10 +261,9 @@
       .catch(err => {
         console.error("데이터 로드 에러:", err);
         document.getElementById("events-grid").innerHTML = 
-          `<div id='status-msg' style='color:#dc2626;'>데이터를 불러올 수 없습니다. data.json 파일이 비어있거나 생성이 안 되었을 수 있습니다.<br>오류 내용: ${err.message}</div>`;
+          `<div id='status-msg' style='color:#dc2626;'>데이터를 불러올 수 없습니다. Actions 실행 후 다시 확인해 주세요.</div>`;
       });
 
-    // 필터 버튼 클릭 이벤트
     document.querySelectorAll("#region-filters .filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("#region-filters .filter-btn").forEach(b => b.classList.remove("active"));
