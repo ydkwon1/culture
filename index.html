@@ -12,6 +12,7 @@
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
+      --highlight-ring: #3b82f6;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
@@ -69,8 +70,17 @@
       flex-direction: column;
       justify-content: space-between;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      transition: transform 0.15s ease, opacity 0.2s ease;
+      position: relative;
+      transition: all 0.3s ease;
     }
+
+    /* 새로 올라온 소식 하이라이트 스타일 */
+    .card.is-new {
+      border: 1.5px solid var(--highlight-ring);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+      background-color: #f8faff;
+    }
+
     /* 지난 공연 회색 처리 */
     .card.past-event {
       background: #f1f5f9;
@@ -82,6 +92,7 @@
       opacity: 0.9;
       filter: grayscale(20%);
     }
+
     .card-top {
       margin-bottom: 12px;
     }
@@ -94,6 +105,18 @@
       background: #eff6ff;
       color: var(--primary);
       margin-right: 4px;
+      transition: opacity 0.3s;
+    }
+    .badge-new {
+      background: #ef4444;
+      color: white;
+      font-weight: 700;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
     }
     .badge-dday {
       background: #fef2f2;
@@ -179,6 +202,30 @@
   <script>
     let eventsData = [];
 
+    // 로컬스토리지에서 이미 확인한 공연 ID 목록 읽기
+    function getSeenIds() {
+      try {
+        return JSON.parse(localStorage.getItem("seen_event_ids") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    // 카드 확인(마우스오버) 시 로컬스토리지에 저장
+    function markAsSeen(id, cardElement) {
+      let seen = getSeenIds();
+      if (!seen.includes(id)) {
+        seen.push(id);
+        localStorage.setItem("seen_event_ids", JSON.stringify(seen));
+      }
+      // 하이라이트 CSS 및 NEW 뱃지 즉시 제거
+      cardElement.classList.remove("is-new");
+      const newBadge = cardElement.querySelector(".badge-new");
+      if (newBadge) {
+        newBadge.remove();
+      }
+    }
+
     function parseDDayStatus(startDateStr, endDateStr) {
       if (!startDateStr) return { label: "일정 확인", isPast: false, badgeClass: "badge" };
       
@@ -229,16 +276,22 @@
         return;
       }
 
+      const seenIds = getSeenIds();
+
       filtered.forEach(item => {
         const status = parseDDayStatus(item.startDate, item.endDate);
+        const isSeen = seenIds.includes(item.id);
+        const isNew = !isSeen && !status.isPast; // 지난 공연은 NEW 뱃지 제외
+
         const card = document.createElement("div");
-        card.className = `card ${status.isPast ? "past-event" : ""}`;
+        card.className = `card ${status.isPast ? "past-event" : ""} ${isNew ? "is-new" : ""}`;
 
         card.innerHTML = `
           <div class="card-top">
+            ${isNew ? '<span class="badge badge-new">NEW</span>' : ''}
             <span class="badge ${status.badgeClass}">${status.label}</span>
             <span class="badge">${item.region || "기타"}</span>
-            <span class="badge badge-source">${item.source || "문화소식"}</span>
+            <span class="badge badge-source">${item.source || "소식"}</span>
             <div class="title">${item.title}</div>
             <div class="info-row">📍 ${item.venue || "상세 확인"}</div>
             <div class="info-row">🗓️ ${item.startDate}${item.endDate && item.endDate !== item.startDate ? ' ~ ' + item.endDate : ''}</div>
@@ -248,6 +301,14 @@
             ${status.isPast ? "지난 소식 보기 →" : "상세 안내 / 예매 바로가기 →"}
           </a>
         `;
+
+        // 마우스오버(Hover) 시 읽음 처리 및 하이라이트 해제
+        if (isNew) {
+          card.addEventListener("mouseenter", () => {
+            markAsSeen(item.id, card);
+          }, { once: true });
+        }
+
         container.appendChild(card);
       });
     }
