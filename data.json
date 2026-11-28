@@ -1,7 +1,7 @@
 [
   {
-    "id": "39b2e7e895",
-    "title": "기획공연 [군민 티켓 선오픈 11/25(수) 10:00] 오페라 <라보엠> 장르 오페라",
+    "id": "43a7b19d9a",
+    "title": "기획공연 [군민 티켓 오픈중 / 일반관객 티켓 오픈 12/1(화) 10:00] 오페라 <라보엠> 장르 오페라",
     "venue": "진천예술의전당 진아트홀",
     "region": "진천군",
     "genre": "기획/대관",
@@ -12,27 +12,63 @@
     "source": "생거진천문화재단"
   },
   {
-    "id": "70fa88ea90",
+    "id": "5cbeeeecb0",
+    "title": "충북도, '탄소중립 시험인증산업특구 페스티벌(취업박람회)' 개최",
+    "venue": "음성군 문화예술공간",
+    "region": "음성군",
+    "genre": "공연/축제",
+    "startDate": "2026-11-28",
+    "endDate": "2026-11-28",
+    "price": "보도/예매 확인",
+    "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5WbnNCTmZtTGZ4bndUdGlhZW9mbVdKbElfUzh5cWhQem5BR1Bqc3RRMk5nTlVGcm1obWpDVzZQMTR2R3lZWnhYMWxPYlMwa1ZRMENsS1R4eGFIMDBjaGxN?oc=5",
+    "source": "언론/문화소식"
+  },
+  {
+    "id": "1e0c5f3c0a",
+    "title": "그라티아 피아노 트리오, ‘다시 쓰인 사계’ 2차 공연",
+    "venue": "음성군 문화예술공간",
+    "region": "음성군",
+    "genre": "공연/축제",
+    "startDate": "2026-11-28",
+    "endDate": "2026-11-28",
+    "price": "보도/예매 확인",
+    "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE96YWg4UHlTQWtjUmgzRXFmR0ZVUHBVM3h1anBQRGs5dmdXMmhaODljVFRtaE5aeFVubmdmQmxhd1lQbHpIRVVSY0JmcGgweXp6M190WTc5TkRRRUVoMlJQUGJMQlVkRERlclNMYXROd2o?oc=5",
+    "source": "언론/문화소식"
+  },
+  {
+    "id": "e7a5308d3a",
+    "title": "충북 진천·음성 탄소중립 특구서 취업박람회…청년 300명 참여",
+    "venue": "음성군 문화예술공간",
+    "region": "음성군",
+    "genre": "공연/축제",
+    "startDate": "2026-11-28",
+    "endDate": "2026-11-28",
+    "price": "보도/예매 확인",
+    "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ldk5FbFljbWdLN2JyTXF0YjNGeWI3czA5NzVjY2ZTT3VITjI1dVFYTHRYU0EzTzdnWUxfWHhsLTFWdmFoclVoa0l2TF9GdE4zYm50MWJKQjBOb0xyUDVLajl5d0JyMlJRYWhNQw?oc=5",
+    "source": "언론/문화소식"
+  },
+  {
+    "id": "ce1647c8d2",
+    "title": "“무대 예술로 ‘장애 차별 없는 세상’ 만들어 갑니다”",
+    "venue": "천안시 문화예술공간",
+    "region": "천안시",
+    "genre": "공연/축제",
+    "startDate": "2026-11-28",
+    "endDate": "2026-11-28",
+    "price": "보도/예매 확인",
+    "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4xUUcyMEFGWjZONnA5WFNrSUIxYWV5NGUweFA3YzRacEpRdVZpdWg4V3Uxc2M2MTdDR3pVWVNTZDBSQjlSU2laNVFKSmpZUThKb1ZnM2thMWFuQ2JhZ3hfbGZlVmRKdUk0?oc=5",
+    "source": "언론/문화소식"
+  },
+  {
+    "id": "c59c12c6f9",
     "title": "상명대, 문화예술경영에 빅데이터 접목… 공연장 경쟁력 연구로 우수논문상",
     "venue": "천안시 문화예술공간",
     "region": "천안시",
     "genre": "공연/축제",
-    "startDate": "2026-11-27",
-    "endDate": "2026-11-27",
+    "startDate": "2026-11-28",
+    "endDate": "2026-11-28",
     "price": "보도/예매 확인",
     "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1DQW5ab0RpSUp3WXotZjM4cXVVUDhQMVV2bU1QT0xwMkR5a3NMUW5GRl9lYXZDV0t4aHNwVmliNF9nRnJYWkszSUFmZ0hFbHljS21iNkEzNHExaDI3dnNHSEIxUVJacVRtTkdZ?oc=5",
-    "source": "언론/문화소식"
-  },
-  {
-    "id": "2515339168",
-    "title": "천안예술의전당 내달 9, 10일 ‘파크콘서트’ 개최",
-    "venue": "천안시 문화예술공간",
-    "region": "천안시",
-    "genre": "공연/축제",
-    "startDate": "2026-11-27",
-    "endDate": "2026-11-27",
-    "price": "보도/예매 확인",
-    "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5jRVVzRkdZaFBoeDFVMlZDamloNnZHNW1jTmh5NmRFT0lzTWhKb3UyZHl1NnlmSnFRY2xQU2M2YmZKeTd4aDdkSjBuZjFzSnl0T0syT2VvQmhqS01BX2pFc2hEdw?oc=5",
     "source": "언론/문화소식"
   },
   {
